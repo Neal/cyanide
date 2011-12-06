@@ -75,28 +75,8 @@ int fb_init() {
 	if(gFbHasInit) return 0;
 	fb_setup();
 	fb_clear();
-    fb_set_loc(0,0);
+	fb_set_loc(0,0);
 	fb_display_text(TRUE);
-
-	fb_print("=====================================================");
-#ifdef S5L8930X
-	fb_print("=====================================================");
-	fb_print("                          ");
-#endif
-
-	fb_print("                     greenpois0n                     ");
-
-#ifdef S5L8930X
-	fb_print("                                                     ");
-#endif
-
-	fb_print("              http://www.greenpois0n.com             ");
-
-#ifdef S5L8930X
-	fb_print("                           ");
-	fb_print("=====================================================");
-#endif
-	fb_print("=====================================================");
 
 	cmd_add("fbecho", &fb_cmd, "write characters back to framebuffer");
 	gFbHasInit = TRUE;

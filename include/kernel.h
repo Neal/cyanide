@@ -31,6 +31,7 @@
 
 #ifndef SELF_KERNEL_PHYMEM
 #	define SELF_KERNEL_PHYMEM 0
+#	warning "SELF_KERNEL_PHYMEM not defined"
 #endif
 
 extern char* gBootArgs;

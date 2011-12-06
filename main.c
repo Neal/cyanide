@@ -61,10 +61,10 @@ int main(int argc, CmdArg* argv) {
 	char result[0x10];
 	if(!gGpHasInit || gCmdCount == 0) {
 		if(gp_init()) {
-			puts("Unable to initialize greenpois0n!!\n");
+//			puts("Unable to initialize greenpois0n!!\n");
 			return -1;
 		}
-		puts("Greenpois0n initialized\n");
+//		puts("Greenpois0n initialized\n");
 		return 0;
 	}
 

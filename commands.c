@@ -58,10 +58,6 @@ void* find_cmd_list_begin() {
 		unsigned int* command = reference-i;
 		if(*command == NULL) {
 			return command+1;
-		} else if (command < TARGET_BASEADDR || command >= TARGET_BASEADDR + 0x40000) {
-			return command+1;
-		} else if (*command < TARGET_BASEADDR || *command >= TARGET_BASEADDR + 0x40000) {
-			return command+1;
 		}
 	}
 	return 0;
@@ -136,7 +132,7 @@ int cmd_init() {
 	cmd_add("mw", &cmd_mw, "write value to specified address");
 	cmd_add("md", &cmd_md, "display value at specified address");
 	cmd_add("call", &cmd_call, "calls a subroutine passing args to it");
-	cmd_add("rdboot", &cmd_rdboot, "patch and boot kernel with ramdisk");
+	//cmd_add("rdboot", &cmd_rdboot, "patch and boot kernel with ramdisk");
 	//cmd_add("test", &cmd_test, "test finding functions offsets");
 
 	jump_to = find_jump_to();
@@ -356,7 +352,8 @@ int cmd_fsboot(int argc, CmdArg* argv) {
 	if(fsboot == NULL) {
 		if(strstr((char*) (IBOOT_BASEADDR + 0x200), "n72ap")) {
 			fsboot = patch_find(IBOOT_BASEADDR, 0x30000, "\xf0\xb5\x03\xaf\x11\x48", 6);
-		} else if(strstr((char*) (IBOOT_BASEADDR + 0x200), "k66ap")) {
+		} else
+		if(strstr((char*) (IBOOT_BASEADDR + 0x200), "k66ap")) {
 			fsboot = patch_find(IBOOT_BASEADDR, 0x30000, "\xf0\xb5\x03\xaf\x81\xb0", 6);
 		} else {
 			fsboot = patch_find(IBOOT_BASEADDR, 0x30000, "\xb0\xb5\x02\xaf\x11\x48", 6);

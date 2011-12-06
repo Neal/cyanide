@@ -65,7 +65,6 @@ void* find_free() {
 
 void* find_malloc() {
 	void* bytes = patch_find(TARGET_BASEADDR, 0x40000, "\x80\xB5\x00\xAF\x01\x21\x00\x22", 8);
-	if (bytes==NULL) return NULL;
 	return bytes+1;
 }
 
@@ -81,7 +80,6 @@ int common_init() {
 	_malloc = find_malloc();
 	if(_malloc == NULL) {
 		puts("Unable to find malloc\n");
-		return -1;
 	} else {
 		printf("Found malloc at 0x%x\n", _malloc);
 	}
@@ -89,7 +87,6 @@ int common_init() {
 	_free = find_free();
 	if(_free == NULL) {
 		puts("Unable to find free\n");
-		return -1;
 	} else {
 		printf("Found free at 0x%x\n", _free);
 	}

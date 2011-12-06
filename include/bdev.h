@@ -19,6 +19,7 @@
 
 #ifndef SELF_BDEV_LIST
 #	define SELF_BDEV_LIST 0
+#	error "SELF_BDEV_LIST not defined"
 #endif
 
 typedef struct BdevDescriptor {
