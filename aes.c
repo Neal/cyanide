@@ -48,7 +48,7 @@ int aes_cmd(int argc, CmdArg* argv) {
 	unsigned int size = 0;
 	unsigned char* key = NULL;
 
-	if(argc != 3) {
+	if(argc < 3 || argc > 4) {
 		puts("usage: aes <enc/dec> [data]\n");
 		return 0;
 	}
@@ -66,7 +66,7 @@ int aes_cmd(int argc, CmdArg* argv) {
 		free(key);
 		return -1;
 	}
-
+	
 	// print iv
 	enter_critical_section();
 	printf("-iv ");

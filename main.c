@@ -64,7 +64,6 @@ int main(int argc, CmdArg* argv) {
 			puts("Unable to initialize greenpois0n!!\n");
 			return -1;
 		}
-//		puts("Greenpois0n initialized\n");
 		return 0;
 	}
 

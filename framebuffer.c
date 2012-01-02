@@ -79,6 +79,7 @@ int fb_init() {
 	fb_display_text(TRUE);
 
 	cmd_add("fbecho", &fb_cmd, "write characters back to framebuffer");
+	cmd_add("fbclear", &fb_cmd_clear, "clear the framebuffer");
 	gFbHasInit = TRUE;
 	return 0;
 }
@@ -100,6 +101,15 @@ int fb_cmd(int argc, CmdArg* argv) {
 	fb_print("\n");
 	return 0;
 }
+
+int fb_cmd_clear() {
+	cmd_start();
+	fb_setup();
+	fb_clear();
+	fb_set_loc(0,0);
+	return 0;
+}
+
 
 void fb_clear() {
     unsigned int *p = 0;
