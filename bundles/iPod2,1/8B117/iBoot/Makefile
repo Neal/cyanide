@@ -20,12 +20,13 @@ LDFLAGS = -Ttext=$(LOADADDR) -nostdlib -lc -lm -lgcc
 all: payload
 
 payload: payload.elf
-	$(BIN2C) payload $(SRC)/payloads/$(TYPE).$(MODEL).h $(TYPE)_$(MODEL)
-	
+	$(BIN2C) $(SRC)/payloads/$(MODEL).$(TYPE).payload $(SRC)/payloads/$(TYPE).$(MODEL).h $(TYPE)_$(MODEL)
+
 payload.elf: $(OBJECTS)
 	$(CC) -o $(@) $(OBJECTS) $(LDFLAGS)
-	$(OBJCOPY) -O binary $(@) payload
+	$(OBJCOPY) -O binary $(@) $(SRC)/payloads/$(MODEL).$(TYPE).payload
+	rm -rf *.o *.elf
 
 clean:
-	rm -rf *.o *.elf payload
-	
+	rm -rf *.o *.elf
+
