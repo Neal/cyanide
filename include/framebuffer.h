@@ -35,7 +35,10 @@ extern Bool gFbHasInit;
 
 int fb_init();
 int fb_cmd(int argc, CmdArg* argv);
-int fb_cmd_clear();
+int fbclear_cmd();
+int fbimg_cmd();
+int fbprintcenter_cmd();
+int fbprintln_cmd();
 void fb_clear();
 void fb_display_text(Bool option);
 void fb_set_loc(unsigned int x, unsigned int y);

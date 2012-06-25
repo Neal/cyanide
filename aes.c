@@ -22,6 +22,7 @@
 #include <string.h>
 
 #include "aes.h"
+#include "nvram.h"
 #include "common.h"
 #include "commands.h"
 #include "functions.h"
@@ -46,7 +47,7 @@ int aes_cmd(int argc, CmdArg* argv) {
 	char* kbag = NULL;
 	char* action = NULL;
 	unsigned int size = 0;
-	unsigned char* key = NULL;
+	unsigned char* rawkey = NULL;
 
 	if(argc < 3 || argc > 4) {
 		puts("usage: aes <enc/dec> [data]\n");
@@ -55,33 +56,37 @@ int aes_cmd(int argc, CmdArg* argv) {
 
 	kbag = argv[2].string;
 	action = argv[1].string;
-	key = (unsigned char*) malloc(kAesSizeMax);
+	rawkey = (unsigned char*) malloc(kAesSizeMax);
 	if(!strcmp(action, "dec")) {
-		size = aes_decrypt_key(kbag, &key);
+		size = aes_decrypt_key(kbag, &rawkey);
 
 	} else if(!strcmp(action, "enc")) {
-		size = aes_encrypt_key(kbag, &key);
+		size = aes_encrypt_key(kbag, &rawkey);
 
 	} else {
-		free(key);
+		free(rawkey);
 		return -1;
 	}
 	
-	// print iv
+	char* iv = (char*) malloc(size * 2 + 1);
+	char* key = (char*) malloc(size * 2 + 1);
+	
 	enter_critical_section();
-	printf("-iv ");
+	// set nvram vars for iv and key and print them
 	for(i = 0; i < 16; i++) {
-		printf("%02x", key[i]);
+		sprintf(iv + i * 2, "%02x", rawkey[i]);
 	}
-
-	// and key
-	printf(" -k ");
-	for(i = 16; i < size; i++) {
-		printf("%02x", key[i]);
+	for(i = 0; i < size - 16; i++) {
+		sprintf(key + i * 2, "%02x", rawkey[i+16]);
 	}
-	printf("\n");
+	nvram_set_var("iv", iv);
+	nvram_set_var("key", key);
+	printf("IV: %s\n", iv);
+	printf("Key: %s\n", key);
 	exit_critical_section();
-
+	
+	if(rawkey) free(rawkey);
+	if(iv) free(iv);
 	if(key) free(key);
 	return 0;
 }

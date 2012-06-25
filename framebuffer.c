@@ -79,7 +79,10 @@ int fb_init() {
 	fb_display_text(TRUE);
 
 	cmd_add("fbecho", &fb_cmd, "write characters back to framebuffer");
-	cmd_add("fbclear", &fb_cmd_clear, "clear the framebuffer");
+	cmd_add("fbclear", &fbclear_cmd, "clear the framebuffer");
+	cmd_add("fbimg", &fbimg_cmd, "display image on framebuffer");
+	cmd_add("fbprintcenter", &fbprintcenter_cmd, "write a character on the center of the framebuffer");
+	cmd_add("fbprintln", &fbprintln_cmd, "write a character on the whole line");
 	gFbHasInit = TRUE;
 	return 0;
 }
@@ -102,7 +105,40 @@ int fb_cmd(int argc, CmdArg* argv) {
 	return 0;
 }
 
-int fb_cmd_clear() {
+int fbimg_cmd(int argc, CmdArg* argv) {
+	cmd_start();
+	if (argc < 2) {
+		puts("usage: fbimg <address>\n");
+		return 0;
+	}
+
+	fb_draw_image((unsigned int*)argv[1].uinteger, 0, 0, gFbTWidth, gFbTHeight);
+	return 0;
+}
+
+int fbprintcenter_cmd(int argc, CmdArg* argv) {
+	cmd_start();
+	if (argc < 2) {
+		puts("usage: fbprintcenter <address>\n");
+		return 0;
+	}
+
+	fb_print_center(argv[0]);
+	return 0;
+}
+
+int fbprintln_cmd(int argc, CmdArg* argv) {
+	cmd_start();
+	if (argc < 2) {
+		puts("usage: fbprintln <address>\n");
+		return 0;
+	}
+
+	fb_print_line(argv[0].string);
+	return 0;
+}
+
+int fbclear_cmd() {
 	cmd_start();
 	fb_setup();
 	fb_clear();
@@ -137,11 +173,6 @@ unsigned int fb_get_height() {
 void fb_set_loc(unsigned int x, unsigned int y) {
 	gFbX = x;
 	gFbY = y;
-}
-
-void fb_set_colors(unsigned int fore, unsigned int back) {
-	gFbForegroundColor = fore;
-	gFbBackgroundColor = back;
 }
 
 void fb_display_text(Bool option) {
@@ -181,6 +212,22 @@ void fb_putc(int c) {
 	if(gFbY == gFbTHeight) {
 		fb_scrollup();
 	}
+}
+
+void fb_print_line(char c) {
+	int i;
+	for(i=0;i<gFbTWidth;i++) {
+		fb_putc(c);
+	}
+}
+
+void fb_print_center(const char* str) {
+	int i;
+	int pad = (gFbTWidth-strlen(str))/2;
+	for(i=0;i<pad;i++) {
+		fb_putc(' ');
+	}
+	fb_print(str);
 }
 
 void fb_print(const char* str) {
